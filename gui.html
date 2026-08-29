@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClearPath — Demo Filter Console</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: #0b1020;
+      color: #eef2ff;
+    }
+
+    .sidebar {
+      position: fixed;
+      width: 230px;
+      height: 100vh;
+      padding: 24px 16px;
+      background: #10172a;
+      border-right: 1px solid #202a43;
+    }
+
+    .logo {
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 35px;
+    }
+
+    .logo span { color: #6d7cff; }
+
+    .nav {
+      padding: 12px 14px;
+      margin: 5px 0;
+      border-radius: 9px;
+      color: #9ca8c7;
+      cursor: pointer;
+    }
+
+    .nav.active {
+      background: #202a4a;
+      color: white;
+    }
+
+    .main {
+      margin-left: 230px;
+      padding: 38px;
+      max-width: 1100px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #29203b;
+      color: #c4a7ff;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 12px 0 5px;
+      font-size: 31px;
+    }
+
+    .subtitle {
+      color: #8d99b8;
+      margin-bottom: 30px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: #121a2e;
+      border: 1px solid #202a43;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .stat {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .muted {
+      color: #8995b4;
+      font-size: 13px;
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .section h2 {
+      font-size: 17px;
+      margin-bottom: 12px;
+    }
+
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      border-bottom: 1px solid #202a43;
+    }
+
+    .filter-row:last-child {
+      border-bottom: 0;
+    }
+
+    .toggle {
+      width: 44px;
+      height: 24px;
+      background: #34405d;
+      border-radius: 20px;
+      padding: 3px;
+      cursor: pointer;
+    }
+
+    .toggle::after {
+      content: "";
+      display: block;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      transition: .2s;
+    }
+
+    .toggle.on {
+      background: #5f6fff;
+    }
+
+    .toggle.on::after {
+      transform: translateX(20px);
+    }
+
+    .notice {
+      margin-top: 22px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      background: #171f35;
+      border: 1px solid #293452;
+      color: #aab5d0;
+      font-size: 13px;
+    }
+
+    button {
+      margin-top: 16px;
+      border: 0;
+      padding: 11px 16px;
+      border-radius: 9px;
+      background: #6573ff;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #7582ff;
+    }
+
+    @media (max-width: 750px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 22px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    <div class="logo">Clear<span>Path</span></div>
+
+    <div class="nav active">Dashboard</div>
+    <div class="nav">Filter Rules</div>
+    <div class="nav">Activity</div>
+    <div class="nav">Settings</div>
+  </aside>
+
+  <main class="main">
+
+    <span class="badge">DEMO ENVIRONMENT</span>
+
+    <h1>Filter Console</h1>
+    <div class="subtitle">
+      Fictional interface for testing and UI prototyping.
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="muted">Filter status</div>
+        <div class="stat" style="color:#68e0a0;">Active</div>
+      </div>
+
+      <div class="card">
+        <div class="muted">Rules configured</div>
+        <div class="stat">24</div>
+      </div>
+
+      <div class="card">
+        <div class="muted">Demo requests</div>
+        <div class="stat">128</div>
+      </div>
+    </div>
+
+    <div class="card section">
+      <h2>Demo Filter Rules</h2>
+
+      <div class="filter-row">
+        <div>
+          <strong>Social media</strong>
+          <div class="muted">Simulated category rule</div>
+        </div>
+        <div class="toggle on" onclick="toggle(this)"></div>
+      </div>
+
+      <div class="filter-row">
+        <div>
+          <strong>Streaming</strong>
+          <div class="muted">Simulated category rule</div>
+        </div>
+        <div class="toggle on" onclick="toggle(this)"></div>
+      </div>
+
+      <div class="filter-row">
+        <div>
+          <strong>Games</strong>
+          <div class="muted">Simulated category rule</div>
+        </div>
+        <div class="toggle" onclick="toggle(this)"></div>
+      </div>
+
+      <div class="filter-row">
+        <div>
+          <strong>News</strong>
+          <div class="muted">Simulated category rule</div>
+        </div>
+        <div class="toggle on" onclick="toggle(this)"></div>
+      </div>
+
+      <button onclick="simulate()">Run Demo Check</button>
+    </div>
+
+    <div class="notice" id="notice">
+      ⚠️ This is a visual prototype. It does not modify browser settings,
+      network filters, administrator controls, or any real filtering service.
+    </div>
+
+  </main>
+
+  <script>
+    function toggle(element) {
+      element.classList.toggle("on");
+    }
+
+    function simulate() {
+      const notice = document.getElementById("notice");
+
+      notice.textContent =
+        "✓ Demo check complete — no real network or filtering settings were changed.";
+
+      setTimeout(() => {
+        notice.textContent =
+          "⚠️ This is a visual prototype. It does not modify browser settings, network filters, administrator controls, or any real filtering service.";
+      }, 3500);
+    }
+  </script>
+
+</body>
+</html
