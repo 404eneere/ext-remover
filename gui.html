@@ -1,290 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClearPath — Demo Filter Console</title>
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extension Control Simulator</title>
 
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      background: #0b1020;
-      color: #eef2ff;
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: Inter, Arial, sans-serif;
     }
 
-    .sidebar {
-      position: fixed;
-      width: 230px;
-      height: 100vh;
-      padding: 24px 16px;
-      background: #10172a;
-      border-right: 1px solid #202a43;
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at top left, #24283a 0%, transparent 35%),
+            #0b0d12;
+        color: #f2f4f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .app {
+        width: min(900px, 94vw);
+        background: #11141b;
+        border: 1px solid #292e3a;
+        border-radius: 18px;
+        box-shadow: 0 25px 80px rgba(0,0,0,.55);
+        overflow: hidden;
+    }
+
+    .topbar {
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        border-bottom: 1px solid #292e3a;
+        background: #151821;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        font-size: 18px;
     }
 
     .logo {
-      font-size: 21px;
-      font-weight: 800;
-      margin-bottom: 35px;
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #7c5cff, #4f8cff);
+        font-weight: 900;
     }
 
-    .logo span { color: #6d7cff; }
-
-    .nav {
-      padding: 12px 14px;
-      margin: 5px 0;
-      border-radius: 9px;
-      color: #9ca8c7;
-      cursor: pointer;
+    .demo {
+        font-size: 11px;
+        color: #a9b0c0;
+        padding: 6px 10px;
+        border: 1px solid #343a49;
+        border-radius: 999px;
+        background: #1b1f29;
     }
 
-    .nav.active {
-      background: #202a4a;
-      color: white;
-    }
-
-    .main {
-      margin-left: 230px;
-      padding: 38px;
-      max-width: 1100px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border-radius: 20px;
-      background: #29203b;
-      color: #c4a7ff;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    h1 {
-      margin: 12px 0 5px;
-      font-size: 31px;
-    }
-
-    .subtitle {
-      color: #8d99b8;
-      margin-bottom: 30px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-    }
-
-    .card {
-      background: #121a2e;
-      border: 1px solid #202a43;
-      border-radius: 14px;
-      padding: 20px;
-    }
-
-    .stat {
-      font-size: 28px;
-      font-weight: 800;
-      margin-top: 8px;
-    }
-
-    .muted {
-      color: #8995b4;
-      font-size: 13px;
-    }
-
-    .section {
-      margin-top: 22px;
-    }
-
-    .section h2 {
-      font-size: 17px;
-      margin-bottom: 12px;
-    }
-
-    .filter-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 15px;
-      border-bottom: 1px solid #202a43;
-    }
-
-    .filter-row:last-child {
-      border-bottom: 0;
-    }
-
-    .toggle {
-      width: 44px;
-      height: 24px;
-      background: #34405d;
-      border-radius: 20px;
-      padding: 3px;
-      cursor: pointer;
-    }
-
-    .toggle::after {
-      content: "";
-      display: block;
-      width: 18px;
-      height: 18px;
-      background: #fff;
-      border-radius: 50%;
-      transition: .2s;
-    }
-
-    .toggle.on {
-      background: #5f6fff;
-    }
-
-    .toggle.on::after {
-      transform: translateX(20px);
+    .content {
+        padding: 28px;
     }
 
     .notice {
-      margin-top: 22px;
-      padding: 14px 16px;
-      border-radius: 10px;
-      background: #171f35;
-      border: 1px solid #293452;
-      color: #aab5d0;
-      font-size: 13px;
+        padding: 16px 18px;
+        border-radius: 12px;
+        background: #171b24;
+        border: 1px solid #303645;
+        color: #aeb6c7;
+        font-size: 13px;
+        line-height: 1.5;
+        margin-bottom: 24px;
+    }
+
+    .notice strong {
+        color: #fff;
+    }
+
+    h1 {
+        margin: 0 0 7px;
+        font-size: 26px;
+    }
+
+    .subtitle {
+        margin: 0 0 25px;
+        color: #8f98aa;
+        font-size: 14px;
+    }
+
+    .extensions {
+        display: grid;
+        gap: 12px;
+    }
+
+    .extension {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 17px;
+        background: #171a22;
+        border: 1px solid #292e39;
+        border-radius: 13px;
+        transition: .2s;
+    }
+
+    .extension:hover {
+        border-color: #41495a;
+        background: #191d26;
+    }
+
+    .info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        color: white;
+        background: #292e3a;
+    }
+
+    .name {
+        font-weight: 650;
+        margin-bottom: 4px;
+    }
+
+    .status {
+        font-size: 12px;
+        color: #7f899c;
+    }
+
+    /* Switch */
+
+    .switch {
+        position: relative;
+        width: 50px;
+        height: 28px;
+        flex-shrink: 0;
+    }
+
+    .switch input {
+        display: none;
+    }
+
+    .slider {
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+        border-radius: 30px;
+        background: #303642;
+        transition: .2s;
+    }
+
+    .slider::before {
+        content: "";
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        left: 3px;
+        top: 3px;
+        background: #aeb5c2;
+        border-radius: 50%;
+        transition: .2s;
+    }
+
+    input:checked + .slider {
+        background: #705cff;
+    }
+
+    input:checked + .slider::before {
+        transform: translateX(22px);
+        background: white;
+    }
+
+    .footer {
+        margin-top: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #697386;
+        font-size: 12px;
     }
 
     button {
-      margin-top: 16px;
-      border: 0;
-      padding: 11px 16px;
-      border-radius: 9px;
-      background: #6573ff;
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
+        border: 1px solid #343b4a;
+        background: #1b1f28;
+        color: #dce1ea;
+        padding: 9px 14px;
+        border-radius: 9px;
+        cursor: pointer;
     }
 
     button:hover {
-      background: #7582ff;
+        background: #242936;
     }
 
-    @media (max-width: 750px) {
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-      }
-
-      .main {
-        margin-left: 0;
-        padding: 22px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
+    .toast {
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+        pointer-events: none;
+        background: #191d26;
+        border: 1px solid #383f4e;
+        padding: 12px 18px;
+        border-radius: 10px;
+        color: #dce1e9;
+        font-size: 13px;
+        transition: .25s;
     }
-  </style>
+
+    .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+</style>
 </head>
 
 <body>
 
-  <aside class="sidebar">
-    <div class="logo">Clear<span>Path</span></div>
+<div class="app">
 
-    <div class="nav active">Dashboard</div>
-    <div class="nav">Filter Rules</div>
-    <div class="nav">Activity</div>
-    <div class="nav">Settings</div>
-  </aside>
+    <div class="topbar">
+        <div class="brand">
+            <div class="logo">I</div>
+            Extension Control
+        </div>
 
-  <main class="main">
-
-    <span class="badge">DEMO ENVIRONMENT</span>
-
-    <h1>Filter Console</h1>
-    <div class="subtitle">
-      Fictional interface for testing and UI prototyping.
+        <div class="demo">
+            SIMULATION MODE
+        </div>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <div class="muted">Filter status</div>
-        <div class="stat" style="color:#68e0a0;">Active</div>
-      </div>
+    <div class="content">
 
-      <div class="card">
-        <div class="muted">Rules configured</div>
-        <div class="stat">24</div>
-      </div>
+        <div class="notice">
+            <strong>Safe simulation:</strong>
+            These controls only change the appearance of this webpage.
+            They do not disable, modify, remove, bypass, or interfere with
+            Chrome extensions or administrator policies.
+        </div>
 
-      <div class="card">
-        <div class="muted">Demo requests</div>
-        <div class="stat">128</div>
-      </div>
+        <h1>Protection Controls</h1>
+        <p class="subtitle">
+            Example interface for demonstrating extension-control switches.
+        </p>
+
+        <div class="extensions">
+
+            <div class="extension">
+                <div class="info">
+                    <div class="icon">G</div>
+                    <div>
+                        <div class="name">GoGuardian</div>
+                        <div class="status" id="status-goguardian">
+                            Simulated state: Enabled
+                        </div>
+                    </div>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox"
+                           checked
+                           onchange="toggleDemo('GoGuardian', this, 'status-goguardian')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="extension">
+                <div class="info">
+                    <div class="icon">G</div>
+                    <div>
+                        <div class="name">Gopher Buddy</div>
+                        <div class="status" id="status-gopher">
+                            Simulated state: Enabled
+                        </div>
+                    </div>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox"
+                           checked
+                           onchange="toggleDemo('Gopher Buddy', this, 'status-gopher')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="extension">
+                <div class="info">
+                    <div class="icon">B</div>
+                    <div>
+                        <div class="name">Blocksi</div>
+                        <div class="status" id="status-blocksi">
+                            Simulated state: Enabled
+                        </div>
+                    </div>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox"
+                           checked
+                           onchange="toggleDemo('Blocksi', this, 'status-blocksi')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="extension">
+                <div class="info">
+                    <div class="icon">+</div>
+                    <div>
+                        <div class="name">Example Extension</div>
+                        <div class="status" id="status-example">
+                            Simulated state: Enabled
+                        </div>
+                    </div>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox"
+                           checked
+                           onchange="toggleDemo('Example Extension', this, 'status-example')">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <span>Chrome / school-policy protections are untouched.</span>
+            <button onclick="resetAll()">Reset switches</button>
+        </div>
+
     </div>
+</div>
 
-    <div class="card section">
-      <h2>Demo Filter Rules</h2>
+<div class="toast" id="toast"></div>
 
-      <div class="filter-row">
-        <div>
-          <strong>Social media</strong>
-          <div class="muted">Simulated category rule</div>
-        </div>
-        <div class="toggle on" onclick="toggle(this)"></div>
-      </div>
+<script>
+function toggleDemo(name, checkbox, statusId) {
+    const status = document.getElementById(statusId);
 
-      <div class="filter-row">
-        <div>
-          <strong>Streaming</strong>
-          <div class="muted">Simulated category rule</div>
-        </div>
-        <div class="toggle on" onclick="toggle(this)"></div>
-      </div>
-
-      <div class="filter-row">
-        <div>
-          <strong>Games</strong>
-          <div class="muted">Simulated category rule</div>
-        </div>
-        <div class="toggle" onclick="toggle(this)"></div>
-      </div>
-
-      <div class="filter-row">
-        <div>
-          <strong>News</strong>
-          <div class="muted">Simulated category rule</div>
-        </div>
-        <div class="toggle on" onclick="toggle(this)"></div>
-      </div>
-
-      <button onclick="simulate()">Run Demo Check</button>
-    </div>
-
-    <div class="notice" id="notice">
-      ⚠️ This is a visual prototype. It does not modify browser settings,
-      network filters, administrator controls, or any real filtering service.
-    </div>
-
-  </main>
-
-  <script>
-    function toggle(element) {
-      element.classList.toggle("on");
+    if (checkbox.checked) {
+        status.textContent = "Simulated state: Enabled";
+        showToast(name + " simulation enabled");
+    } else {
+        status.textContent = "Simulated state: Disabled";
+        showToast(name + " simulation disabled");
     }
+}
 
-    function simulate() {
-      const notice = document.getElementById("notice");
+function resetAll() {
+    document.querySelectorAll(".switch input").forEach(input => {
+        input.checked = true;
+        input.dispatchEvent(new Event("change"));
+    });
 
-      notice.textContent =
-        "✓ Demo check complete — no real network or filtering settings were changed.";
+    showToast("All simulations reset");
+}
 
-      setTimeout(() => {
-        notice.textContent =
-          "⚠️ This is a visual prototype. It does not modify browser settings, network filters, administrator controls, or any real filtering service.";
-      }, 3500);
-    }
-  </script>
+function showToast(message) {
+    const toast = document.getElementById("toast");
+
+    toast.textContent = message;
+    toast.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 1800);
+}
+</script>
 
 </body>
-</html
+</html>
