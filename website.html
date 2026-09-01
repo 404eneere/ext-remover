@@ -1,73 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>School Extension Toggler</title>
+  <title>Extension Toggler Demo</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f5f6fa;
-      color: #222;
+      background: #f1f3f4;
+      padding: 30px;
     }
 
-    header {
-      background: #202124;
-      color: white;
-      padding: 22px;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    h2 {
-      margin-bottom: 5px;
-    }
-
-    .subtitle {
-      color: #777;
-      margin-bottom: 25px;
-    }
-
-    .extension {
+    .card {
       background: white;
-      padding: 18px;
-      margin-bottom: 12px;
-      border-radius: 12px;
+      max-width: 600px;
+      margin: 10px auto;
+      padding: 20px;
+      border-radius: 10px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 7px rgba(0,0,0,.08);
+      justify-content: space-between;
     }
 
-    .extension-name {
-      font-size: 17px;
+    .name {
+      font-size: 18px;
       font-weight: bold;
     }
 
     .status {
-      font-size: 13px;
       color: #777;
       margin-top: 5px;
     }
 
-    /* Switch */
+    /* BIG VISIBLE SWITCH */
     .switch {
+      width: 60px;
+      height: 34px;
       position: relative;
-      width: 52px;
-      height: 29px;
-      flex-shrink: 0;
+      display: inline-block;
     }
 
     .switch input {
@@ -76,150 +45,87 @@
 
     .slider {
       position: absolute;
-      inset: 0;
-      background: #ccc;
-      border-radius: 30px;
       cursor: pointer;
-      transition: .2s;
+      background: #999;
+      width: 60px;
+      height: 34px;
+      border-radius: 34px;
+      transition: 0.2s;
     }
 
-    .slider::before {
+    .slider:before {
       content: "";
       position: absolute;
-      width: 23px;
-      height: 23px;
-      left: 3px;
-      top: 3px;
+      width: 26px;
+      height: 26px;
+      left: 4px;
+      top: 4px;
       background: white;
       border-radius: 50%;
-      transition: .2s;
+      transition: 0.2s;
     }
 
     input:checked + .slider {
-      background: #5865f2;
+      background: #2196f3;
     }
 
-    input:checked + .slider::before {
-      transform: translateX(23px);
-    }
-
-    .footer {
-      margin-top: 25px;
-      text-align: center;
-      color: #888;
-      font-size: 13px;
+    input:checked + .slider:before {
+      transform: translateX(26px);
     }
   </style>
 </head>
 
 <body>
 
-<header>
-  School Extension Manager
-</header>
+  <h1>School Extension Toggler</h1>
 
-<div class="container">
+  <p>Demo only — these switches don't change real Chrome extensions.</p>
 
-  <h2>Extensions</h2>
-  <div class="subtitle">
-    Demo interface — switches do not modify real browser extensions.
-  </div>
+  <div id="list"></div>
 
-  <div id="extensionList"></div>
+  <script>
+    const extensions = [
+      "GoGuardian",
+      "Securly",
+      "Lightspeed",
+      "Google Classroom",
+      "Schoology",
+      "ClassLink",
+      "Grammarly",
+      "Google Translate"
+    ];
 
-  <div class="footer">
-    Demo only
-  </div>
+    const list = document.getElementById("list");
 
-</div>
+    extensions.forEach(function(name) {
 
-<script>
+      const card = document.createElement("div");
+      card.className = "card";
 
-const extensions = [
-  {
-    name: "Schoology",
-    enabled: true
-  },
-  {
-    name: "Google Classroom",
-    enabled: true
-  },
-  {
-    name: "GoGuardian",
-    enabled: true
-  },
-  {
-    name: "Lightspeed Filter",
-    enabled: true
-  },
-  {
-    name: "Securly",
-    enabled: true
-  },
-  {
-    name: "ClassLink",
-    enabled: false
-  },
-  {
-    name: "Grammarly",
-    enabled: true
-  },
-  {
-    name: "Google Translate",
-    enabled: false
-  }
-];
-
-function renderExtensions() {
-
-  const list = document.getElementById("extensionList");
-
-  list.innerHTML = "";
-
-  extensions.forEach((extension, index) => {
-
-    const item = document.createElement("div");
-
-    item.className = "extension";
-
-    item.innerHTML = `
-      <div>
-        <div class="extension-name">
-          ${extension.name}
+      card.innerHTML = `
+        <div>
+          <div class="name">${name}</div>
+          <div class="status">Enabled</div>
         </div>
 
-        <div class="status">
-          ${extension.enabled ? "Enabled" : "Disabled"}
-        </div>
-      </div>
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="slider"></span>
+        </label>
+      `;
 
-      <label class="switch">
+      const checkbox = card.querySelector("input");
+      const status = card.querySelector(".status");
 
-        <input
-          type="checkbox"
-          ${extension.enabled ? "checked" : ""}
-          onchange="toggleExtension(${index}, this.checked)"
-        >
+      checkbox.addEventListener("change", function() {
+        status.textContent = checkbox.checked
+          ? "Enabled"
+          : "Disabled";
+      });
 
-        <span class="slider"></span>
-
-      </label>
-    `;
-
-    list.appendChild(item);
-  });
-}
-
-function toggleExtension(index, state) {
-
-  extensions[index].enabled = state;
-
-  renderExtensions();
-}
-
-renderExtensions();
-
-</script>
+      list.appendChild(card);
+    });
+  </script>
 
 </body>
 </html>
