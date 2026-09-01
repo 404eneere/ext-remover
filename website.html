@@ -3,160 +3,223 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Extension Manager</title>
+  <title>School Extension Toggler</title>
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f4f6f8;
+      background: #f5f6fa;
       color: #222;
     }
 
     header {
       background: #202124;
       color: white;
-      padding: 18px 28px;
+      padding: 22px;
       font-size: 22px;
       font-weight: bold;
     }
 
     .container {
-      max-width: 850px;
-      margin: 35px auto;
+      max-width: 700px;
+      margin: 30px auto;
       padding: 0 20px;
     }
 
-    .notice {
-      background: #fff3cd;
-      border: 1px solid #ffe69c;
-      padding: 14px;
-      border-radius: 8px;
-      margin-bottom: 20px;
+    h2 {
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #777;
+      margin-bottom: 25px;
     }
 
     .extension {
       background: white;
-      border-radius: 12px;
       padding: 18px;
-      margin-bottom: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      margin-bottom: 12px;
+      border-radius: 12px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-    }
-
-    .info {
-      display: flex;
       align-items: center;
-      gap: 15px;
+      box-shadow: 0 2px 7px rgba(0,0,0,.08);
     }
 
-    .icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      background: #5865f2;
-      color: white;
-      display: grid;
-      place-items: center;
-      font-weight: bold;
-      font-size: 20px;
-    }
-
-    .name {
-      font-weight: bold;
+    .extension-name {
       font-size: 17px;
-    }
-
-    .id {
-      color: #777;
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    button {
-      border: 0;
-      border-radius: 7px;
-      padding: 10px 16px;
-      background: #d93025;
-      color: white;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #b3261e;
+      font-weight: bold;
     }
 
     .status {
+      font-size: 13px;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    /* Switch */
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 29px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #ccc;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 23px;
+      height: 23px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: .2s;
+    }
+
+    input:checked + .slider {
+      background: #5865f2;
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(23px);
+    }
+
+    .footer {
       margin-top: 25px;
-      color: #666;
-      font-size: 14px;
+      text-align: center;
+      color: #888;
+      font-size: 13px;
     }
   </style>
 </head>
 
 <body>
-  <header>Extension Manager</header>
 
-  <main class="container">
-    <div class="notice">
-      <strong>Administrator notice:</strong>
-      Some extensions may be managed by your organization.
-    </div>
+<header>
+  School Extension Manager
+</header>
 
-    <div id="extensions"></div>
+<div class="container">
 
-    <div class="status" id="status">
-      3 extensions installed
-    </div>
-  </main>
+  <h2>Extensions</h2>
+  <div class="subtitle">
+    Demo interface — switches do not modify real browser extensions.
+  </div>
 
-  <script>
-    const extensions = [
-      { name: "Example Extension", id: "example-extension" },
-      { name: "Study Tools", id: "study-tools" },
-      { name: "School Helper", id: "school-helper" }
-    ];
+  <div id="extensionList"></div>
 
-    const container = document.getElementById("extensions");
-    const status = document.getElementById("status");
+  <div class="footer">
+    Demo only
+  </div>
 
-    function render() {
-      container.innerHTML = "";
+</div>
 
-      extensions.forEach((ext, index) => {
-        const card = document.createElement("div");
-        card.className = "extension";
+<script>
 
-        card.innerHTML = `
-          <div class="info">
-            <div class="icon">E</div>
-            <div>
-              <div class="name">${ext.name}</div>
-              <div class="id">ID: ${ext.id}</div>
-            </div>
-          </div>
+const extensions = [
+  {
+    name: "Schoology",
+    enabled: true
+  },
+  {
+    name: "Google Classroom",
+    enabled: true
+  },
+  {
+    name: "GoGuardian",
+    enabled: true
+  },
+  {
+    name: "Lightspeed Filter",
+    enabled: true
+  },
+  {
+    name: "Securly",
+    enabled: true
+  },
+  {
+    name: "ClassLink",
+    enabled: false
+  },
+  {
+    name: "Grammarly",
+    enabled: true
+  },
+  {
+    name: "Google Translate",
+    enabled: false
+  }
+];
 
-          <button onclick="removeExtension(${index})">
-            Remove
-          </button>
-        `;
+function renderExtensions() {
 
-        container.appendChild(card);
-      });
+  const list = document.getElementById("extensionList");
 
-      status.textContent =
-        `${extensions.length} extension${extensions.length === 1 ? "" : "s"} installed`;
-    }
+  list.innerHTML = "";
 
-    function removeExtension(index) {
-      extensions.splice(index, 1);
-      render();
-    }
+  extensions.forEach((extension, index) => {
 
-    render();
-  </script>
+    const item = document.createElement("div");
+
+    item.className = "extension";
+
+    item.innerHTML = `
+      <div>
+        <div class="extension-name">
+          ${extension.name}
+        </div>
+
+        <div class="status">
+          ${extension.enabled ? "Enabled" : "Disabled"}
+        </div>
+      </div>
+
+      <label class="switch">
+
+        <input
+          type="checkbox"
+          ${extension.enabled ? "checked" : ""}
+          onchange="toggleExtension(${index}, this.checked)"
+        >
+
+        <span class="slider"></span>
+
+      </label>
+    `;
+
+    list.appendChild(item);
+  });
+}
+
+function toggleExtension(index, state) {
+
+  extensions[index].enabled = state;
+
+  renderExtensions();
+}
+
+renderExtensions();
+
+</script>
+
 </body>
 </html>
