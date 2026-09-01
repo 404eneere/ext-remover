@@ -1,131 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Extension Toggler Demo</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f3f4;
-      padding: 30px;
-    }
-
-    .card {
-      background: white;
-      max-width: 600px;
-      margin: 10px auto;
-      padding: 20px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .name {
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .status {
-      color: #777;
-      margin-top: 5px;
-    }
-
-    /* BIG VISIBLE SWITCH */
-    .switch {
-      width: 60px;
-      height: 34px;
-      position: relative;
-      display: inline-block;
-    }
-
-    .switch input {
-      display: none;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      background: #999;
-      width: 60px;
-      height: 34px;
-      border-radius: 34px;
-      transition: 0.2s;
-    }
-
-    .slider:before {
-      content: "";
-      position: absolute;
-      width: 26px;
-      height: 26px;
-      left: 4px;
-      top: 4px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.2s;
-    }
-
-    input:checked + .slider {
-      background: #2196f3;
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-  </style>
+  <title>School Extension Toggler</title>
 </head>
 
 <body>
 
   <h1>School Extension Toggler</h1>
+  <p>Demo only. These controls do not change real browser extensions.</p>
 
-  <p>Demo only — these switches don't change real Chrome extensions.</p>
+  <div>
+    <b>GoGuardian</b>
+    <label>
+      <input type="checkbox" checked>
+      ON / OFF
+    </label>
+  </div>
 
-  <div id="list"></div>
+  <br>
 
-  <script>
-    const extensions = [
-      "GoGuardian",
-      "Securly",
-      "Lightspeed",
-      "Google Classroom",
-      "Schoology",
-      "ClassLink",
-      "Grammarly",
-      "Google Translate"
-    ];
+  <div>
+    <b>Securly</b>
+    <label>
+      <input type="checkbox" checked>
+      ON / OFF
+    </label>
+  </div>
 
-    const list = document.getElementById("list");
+  <br>
 
-    extensions.forEach(function(name) {
+  <div>
+    <b>Lightspeed</b>
+    <label>
+      <input type="checkbox" checked>
+      ON / OFF
+    </label>
+  </div>
 
-      const card = document.createElement("div");
-      card.className = "card";
+  <br>
 
-      card.innerHTML = `
-        <div>
-          <div class="name">${name}</div>
-          <div class="status">Enabled</div>
-        </div>
+  <div>
+    <b>Google Classroom</b>
+    <label>
+      <input type="checkbox" checked>
+      ON / OFF
+    </label>
+  </div>
 
-        <label class="switch">
-          <input type="checkbox" checked>
-          <span class="slider"></span>
-        </label>
-      `;
+  <br>
 
-      const checkbox = card.querySelector("input");
-      const status = card.querySelector(".status");
-
-      checkbox.addEventListener("change", function() {
-        status.textContent = checkbox.checked
-          ? "Enabled"
-          : "Disabled";
-      });
-
-      list.appendChild(card);
-    });
-  </script>
+  <div>
+    <b>Schoology</b>
+    <label>
+      <input type="checkbox">
+      ON / OFF
+    </label>
+  </div>
 
 </body>
 </html>
