@@ -1,129 +1,398 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Extension Toggler</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Extension Remover</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f3f4;
-      padding: 30px;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    .card {
-      background: white;
-      max-width: 600px;
-      margin: 10px auto;
-      padding: 20px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
 
-    .name {
-      font-size: 18px;
-      font-weight: bold;
-    }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
 
-    .status {
-      color: #777;
-      margin-top: 5px;
-    }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
 
-    /* BIG VISIBLE SWITCH */
-    .switch {
-      width: 60px;
-      height: 34px;
-      position: relative;
-      display: inline-block;
-    }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
 
-    .switch input {
-      display: none;
-    }
+        .info-box {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
 
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      background: #999;
-      width: 60px;
-      height: 34px;
-      border-radius: 34px;
-      transition: 0.2s;
-    }
+        .info-box h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
 
-    .slider:before {
-      content: "";
-      position: absolute;
-      width: 26px;
-      height: 26px;
-      left: 4px;
-      top: 4px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.2s;
-    }
+        .instructions {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
 
-    input:checked + .slider {
-      background: #2196f3;
-    }
+        .instructions h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
 
-    input:checked + .slider:before {
-      transform: translateX(26px);
-    }
-  </style>
+        .instructions ol {
+            margin-left: 25px;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .instructions code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63031;
+        }
+
+        .extensions-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .extensions-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: #d63031;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b71c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(214, 48, 49, 0.4);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        #extensionsList {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .extension-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .extension-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .extension-item.selected {
+            background: #e8f0ff;
+            border-color: #667eea;
+        }
+
+        .extension-info {
+            flex-grow: 1;
+        }
+
+        .extension-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .extension-id {
+            font-size: 0.9em;
+            color: #666;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+
+        .status-message.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            display: block;
+        }
+
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #856404;
+        }
+
+        .note strong {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .extension-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .checkbox {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
-
 <body>
-
-  <h1>School Extension Toggler</h1>
-
-  <div id="list"></div>
-
-  <script>
-    const extensions = [
-      "GoGuardian",
-      "Securly",
-      "Lightspeed",
-      "Google Classroom",
-      "Schoology",
-      "ClassLink",
-      "Grammarly",
-      "Google Translate"
-    ];
-
-    const list = document.getElementById("list");
-
-    extensions.forEach(function(name) {
-
-      const card = document.createElement("div");
-      card.className = "card";
-
-      card.innerHTML = `
-        <div>
-          <div class="name">${name}</div>
-          <div class="status">Enabled</div>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Chrome Extension Remover</h1>
+            <p>Easily manage and remove Chrome extensions</p>
         </div>
 
-        <label class="switch">
-          <input type="checkbox" checked>
-          <span class="slider"></span>
-        </label>
-      `;
+        <div class="info-box">
+            <h2>ℹ️ About This Tool</h2>
+            <p>This tool helps you view and remove Chrome extensions. Since web pages cannot directly uninstall extensions for security reasons, this page provides you with multiple methods to remove extensions from your browser.</p>
+        </div>
 
-      const checkbox = card.querySelector("input");
-      const status = card.querySelector(".status");
+        <div class="instructions">
+            <h2>📋 Methods to Remove Extensions</h2>
+            <h3 style="color: #555; margin-bottom: 15px; margin-top: 20px;">Method 1: Chrome Settings (Recommended)</h3>
+            <ol>
+                <li>Open Chrome and go to <code>chrome://extensions</code></li>
+                <li>Find the extension you want to remove</li>
+                <li>Click the <strong>Remove</strong> button</li>
+                <li>Confirm the removal when prompted</li>
+            </ol>
 
-      checkbox.addEventListener("change", function() {
-        status.textContent = checkbox.checked
-          ? "Enabled"
-          : "Disabled";
-      });
+            <h3 style="color: #555; margin-bottom: 15px; margin-top: 20px;">Method 2: Quick Links Below</h3>
+            <ol>
+                <li>Use the button below to open Chrome Extensions page</li>
+                <li>View the list of installed extensions</li>
+                <li>Find and remove extensions using the interface</li>
+            </ol>
 
-      list.appendChild(card);
-    });
-  </script>
+            <h3 style="color: #555; margin-bottom: 15px; margin-top: 20px;">Method 3: Using Command Line (Advanced)</h3>
+            <ol>
+                <li>On <strong>Windows</strong>: Open PowerShell and run:
+                    <div style="background: #f0f0f0; padding: 10px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 0.9em; overflow-x: auto;">
+                        Remove-Item -Path "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Extensions\*" -Recurse -Force
+                    </div>
+                </li>
+                <li>On <strong>Mac</strong>: Open Terminal and run:
+                    <div style="background: #f0f0f0; padding: 10px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 0.9em; overflow-x: auto;">
+                        rm -rf ~/Library/Application\ Support/Google/Chrome/Default/Extensions/*
+                    </div>
+                </li>
+                <li>On <strong>Linux</strong>: Open Terminal and run:
+                    <div style="background: #f0f0f0; padding: 10px; border-radius: 4px; margin-top: 8px; font-family: monospace; font-size: 0.9em; overflow-x: auto;">
+                        rm -rf ~/.config/google-chrome/Default/Extensions/*
+                    </div>
+                </li>
+                <li><strong>Close Chrome completely</strong> before running these commands</li>
+                <li>After running, restart Chrome</li>
+            </ol>
+        </div>
 
+        <div class="extensions-section">
+            <h2>🎯 Quick Actions</h2>
+            <div class="button-group">
+                <button class="btn-primary" onclick="openChromeExtensions()">
+                    🔗 Open Chrome Extensions Page
+                </button>
+                <button class="btn-secondary" onclick="copyAllExtensionIds()">
+                    📋 Copy All Extension IDs
+                </button>
+            </div>
+
+            <h2 style="margin-top: 30px;">📦 Popular Extensions to Consider Removing</h2>
+            <div id="extensionsList">
+                <div class="extension-item">
+                    <div style="display: flex; align-items: center; width: 100%;">
+                        <input type="checkbox" class="checkbox" onchange="updateRemoveButton()">
+                        <div class="extension-info">
+                            <div class="extension-name">⚠️ Note</div>
+                            <div class="extension-id">Web pages cannot automatically remove extensions for security reasons. Use the Chrome Extensions page or methods above instead.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+
+            <div class="note">
+                <strong>💡 Tips for Extension Management:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Regularly review installed extensions for security</li>
+                    <li>Disable extensions you don't use to improve performance</li>
+                    <li>Only install extensions from the Chrome Web Store</li>
+                    <li>Keep Chrome and extensions updated</li>
+                    <li>Check extension permissions before installation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openChromeExtensions() {
+            // Open the Chrome Extensions management page
+            window.open('chrome://extensions/', '_blank');
+        }
+
+        function copyAllExtensionIds() {
+            const message = document.getElementById('statusMessage');
+            try {
+                const text = 'To view your extensions, visit chrome://extensions in your Chrome browser.\n\nFor security reasons, extension IDs cannot be accessed from web pages.';
+                navigator.clipboard.writeText(text).then(() => {
+                    showMessage('Information copied to clipboard! Visit chrome://extensions to see your extensions.', 'success');
+                }).catch(() => {
+                    showMessage('Visit chrome://extensions in your Chrome browser to manage extensions.', 'info');
+                });
+            } catch (error) {
+                showMessage('Visit chrome://extensions in your Chrome browser to manage extensions.', 'info');
+            }
+        }
+
+        function updateRemoveButton() {
+            // Placeholder for checkbox updates
+        }
+
+        function showMessage(text, type) {
+            const message = document.getElementById('statusMessage');
+            message.textContent = text;
+            message.className = 'status-message ' + type;
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+
+        // Display info message on load
+        window.addEventListener('load', () => {
+            showMessage('💡 Tip: Open chrome://extensions to manage your extensions directly.', 'info');
+        });
+    </script>
 </body>
 </html>
